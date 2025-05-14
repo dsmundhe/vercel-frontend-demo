@@ -1,30 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useEffect } from "react";
+import "./App.css"; // Include the loader CSS here
 
 const App = () => {
-  const [data, setData] = React.useState();
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/");
+        const response = await axios.get("https://vercel-backend-demo-umber.vercel.app/");
         if (!response) {
           setData("No Data available");
-          return;
+        } else {
+          setData(response.data.msg);
         }
-        setData(response.data.msg);
       } catch (error) {
         setData(error.message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
-  console.log(data);
+
   return (
-    <div>
-      <h1>Hello DM</h1>
-      <h1>{data}</h1>
+    <div className="container">
+      {loading ? (
+        <div className="loader"></div>
+      ) : (
+        <>
+          <h1>Hello DM</h1>
+          <h1>{data}</h1>
+        </>
+      )}
     </div>
   );
 };
